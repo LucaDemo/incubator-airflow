@@ -124,3 +124,8 @@ ENV/
 
 # Spark
 rat-results.txt
+
+#Eclipse PyDev
+.project
+.pydevproject
+
