@@ -104,8 +104,12 @@ class AwsHook(BaseHook):
 
                 if region_name is None:
                     region_name = connection_object.extra_dejson.get('region_name')
-
-                s3_endpoint_url = connection_object.extra_dejson.get('host')
+                
+                
+                if connection_object.host:
+                    s3_endpoint_url = connection_object.host
+                else:
+                    s3_endpoint_url = connection_object.extra_dejson.get('host')
 
             except AirflowException:
                 # No connection found: fallback on boto3 credential strategy
