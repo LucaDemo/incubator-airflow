@@ -89,9 +89,14 @@ class AwsHook(BaseHook):
         if self.aws_conn_id:
             try:
                 connection_object = self.get_connection(self.aws_conn_id)
+                
+                s3_endpoint_url = connection_object.extra_dejson.get('host')
+                
                 if connection_object.login:
                     aws_access_key_id = connection_object.login
                     aws_secret_access_key = connection_object.password
+                    if connection_object.host:
+                        s3_endpoint_url = connection_object.host                    
 
                 elif 'aws_secret_access_key' in connection_object.extra_dejson:
                     aws_access_key_id = connection_object.extra_dejson['aws_access_key_id']
@@ -103,13 +108,8 @@ class AwsHook(BaseHook):
                                          connection_object.extra_dejson.get('s3_config_format'))
 
                 if region_name is None:
-                    region_name = connection_object.extra_dejson.get('region_name')
-                
-                
-                if connection_object.host:
-                    s3_endpoint_url = connection_object.host
-                else:
-                    s3_endpoint_url = connection_object.extra_dejson.get('host')
+                    region_name = connection_object.extra_dejson.get('region_name')         
+        
 
             except AirflowException:
                 # No connection found: fallback on boto3 credential strategy
